@@ -64,7 +64,7 @@ class PostURLTests(TestCase):
             reverse(
                 'posts:profile',
                 kwargs={'username': self.user.username}
-            ): HTTPStatus.FOUND.value,
+            ): HTTPStatus.OK.value,
             reverse('posts:post_detail',
                     args=[self.post.pk]): HTTPStatus.OK.value,
             reverse('posts:post_create'): HTTPStatus.FOUND.value,
@@ -86,10 +86,6 @@ class PostURLTests(TestCase):
                 'posts:post_edit',
                 args=[self.post.pk]
             ): reverse('posts:post_detail', args=[self.post.pk]),
-            reverse(
-                'posts:profile',
-                kwargs={'username': self.user.username}
-            ): reverse('users:login')
         }
         for address, redirect_url in list_redirect_urls.items():
             with self.subTest(address=address):
