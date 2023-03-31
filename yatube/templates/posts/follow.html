@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}Новостная лента{% endblock %}
+{% block content %}
+  <h5>{{ title }}</h5>
+  {% include 'posts/includes/switcher.html' %}
+  {% for post in page_obj %}
+    {% include 'includes/article.html' %}
+    {% if post.group %}   
+      <a href="{% url 'posts:group_list' post.group.slug %}">
+        все записи группы</a>
+    {% else %}
+      <a href="">...</a>   
+    {% endif %}
+    {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}
