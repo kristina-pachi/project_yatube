@@ -3,7 +3,7 @@
   <div class="card my-4">
     <h5 class="card-header">Добавить комментарий:</h5>
     <div class="card-body">
-      <form method="post" action="{% url 'posts:add_comment' post_id %}">
+      <form method="post" action="{% url 'posts:add_comment' one_post.pk %}">
         {% csrf_token %}      
         <div class="form-group mb-2">
           {{ form.text|addclass:"form-control" }}

@@ -70,7 +70,7 @@ class TaskCreateFormTests(TestCase):
             'image': uploaded,
         }
 
-        self.authorized_client.post(
+        response = self.authorized_client.post(
             reverse('posts:post_create'),
             data=form_data,
             follow=True
@@ -78,10 +78,29 @@ class TaskCreateFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
             Post.objects.filter(
-                text=form_data["text"],
-                group=form_data["group"],
+                text=form_data['text'],
+                group=form_data['group'],
                 image='posts/small.gif'
             ).exists()
+        )
+        text = (
+            b'ddsfsdfsdfsfsd'
+        )
+        uploaded = SimpleUploadedFile(
+            name='aasdas.txt',
+            content=text,
+            content_type='text/txt'
+        )
+        form_data['image'] = uploaded
+        response = self.authorized_client.post(
+            reverse('posts:post_create'),
+            data=form_data,
+        )
+        self.assertFormError(
+            response,
+            'form',
+            'image',
+            'Загрузите правильное изображение. Файл, который вы загрузили, поврежден или не является изображением.'
         )
 
     def test_edit_post(self):
@@ -105,7 +124,7 @@ class TaskCreateFormTests(TestCase):
         )
         self.assertTrue(
             Post.objects.filter(
-                text=form_data["text"],
-                group=form_data["group"]
+                text=form_data['text'],
+                group=form_data['group']
             ).exists()
         )

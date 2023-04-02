@@ -58,19 +58,19 @@ class PostURLTests(TestCase):
     def test_url_for_guest_client(self):
         """Статус страниц неавторизованного пользователя."""
         list_urls = {
-            reverse('posts:index'): HTTPStatus.OK.value,
+            reverse('posts:index'): HTTPStatus.OK,
             reverse('posts:group_list',
-                    kwargs={'slug': self.group.slug}): HTTPStatus.OK.value,
+                    kwargs={'slug': self.group.slug}): HTTPStatus.OK,
             reverse(
                 'posts:profile',
                 kwargs={'username': self.user.username}
-            ): HTTPStatus.OK.value,
+            ): HTTPStatus.OK,
             reverse('posts:post_detail',
-                    args=[self.post.pk]): HTTPStatus.OK.value,
-            reverse('posts:post_create'): HTTPStatus.FOUND.value,
+                    args=[self.post.pk]): HTTPStatus.OK,
+            reverse('posts:post_create'): HTTPStatus.FOUND,
             reverse('posts:post_edit',
-                    args=[self.post.pk]): HTTPStatus.FOUND.value,
-            '/wild_west/': HTTPStatus.NOT_FOUND.value
+                    args=[self.post.pk]): HTTPStatus.FOUND,
+            '/wild_west/': HTTPStatus.NOT_FOUND
         }
 
         for address, status in list_urls.items():
@@ -95,19 +95,19 @@ class PostURLTests(TestCase):
     def test_url_for_authorized_client(self):
         """Статус страниц авторизованного пользователя."""
         list_urls = {
-            reverse('posts:index'): HTTPStatus.OK.value,
+            reverse('posts:index'): HTTPStatus.OK,
             reverse('posts:group_list',
-                    kwargs={'slug': self.group.slug}): HTTPStatus.OK.value,
+                    kwargs={'slug': self.group.slug}): HTTPStatus.OK,
             reverse(
                 'posts:profile',
                 kwargs={'username': self.user.username}
-            ): HTTPStatus.OK.value,
+            ): HTTPStatus.OK,
             reverse('posts:post_detail',
-                    args=[self.post.pk]): HTTPStatus.OK.value,
-            reverse('posts:post_create'): HTTPStatus.OK.value,
+                    args=[self.post.pk]): HTTPStatus.OK,
+            reverse('posts:post_create'): HTTPStatus.OK,
             reverse('posts:post_edit',
-                    args=[self.post.pk]): HTTPStatus.OK.value,
-            '/wild_west/': HTTPStatus.NOT_FOUND.value
+                    args=[self.post.pk]): HTTPStatus.OK,
+            '/wild_west/': HTTPStatus.NOT_FOUND
         }
 
         for address, status in list_urls.items():

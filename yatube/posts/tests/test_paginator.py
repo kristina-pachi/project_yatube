@@ -18,15 +18,15 @@ class PaginatorTest(TestCase):
             slug='ex-president',
             description='Искусство запоя',
         )
-        list = []
+        list_of_posts = []
         for i in range(13):
             posts = Post(
                 author=cls.user,
                 group=cls.group,
                 text=f'{i}'
             )
-            list.append(posts)
-        cls.post = Post.objects.bulk_create(list)
+            list_of_posts.append(posts)
+        cls.post = Post.objects.bulk_create(list_of_posts)
 
     def setUp(self):
         self.guest_client = Client()

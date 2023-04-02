@@ -15,30 +15,26 @@ def authorized_only(func):
     return check_user
 
 
+def piginator(request, post):
+    paginator = Paginator(post, settings.NUMBER_OF_POSTS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return page_obj
+
+
 @cache_page(20)
 def index(request):
     template = 'posts/index.html'
-    post_list = Post.objects.all()
-    paginator = Paginator(post_list, settings.NUMBER_OF_POSTS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    title = 'Последние обновления на сайте'
-    context = {
-        'page_obj': page_obj,
-        'title': title,
-    }
-    return render(request, template, context)
+    posts = Post.objects.select_related().all()
+    return render(request, template, {'page_obj': piginator(request, posts)})
 
 
 def group_posts(request, slug):
     template = 'posts/group_list.html'
     group = get_object_or_404(Group, slug=slug)
-    post_list = group.posts.all()
-    paginator = Paginator(post_list, settings.NUMBER_OF_POSTS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    posts = group.posts.all()
     context = {
-        'page_obj': page_obj,
+        'page_obj': piginator(request, posts),
         'group': group,
     }
     return render(request, template, context)
@@ -48,11 +44,7 @@ def profile(request, username):
     author = get_object_or_404(User, username=username)
     user = request.user
     template = 'posts/profile.html'
-    all_posts = author.posts.all()
-    paginator = Paginator(all_posts, settings.NUMBER_OF_POSTS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    count = len(all_posts)
+    posts = author.posts.all()
     if request.user.is_authenticated:
         following = Follow.objects.filter(user=user, author=author).exists()
     else:
@@ -60,8 +52,8 @@ def profile(request, username):
     context = {
         'author': author,
         'user': user,
-        'page_obj': page_obj,
-        'count': count,
+        'page_obj': piginator(request, posts),
+        'count': posts.count(),
         'following': following,
     }
     return render(request, template, context)
@@ -71,10 +63,9 @@ def post_detail(request, post_id):
     template = 'posts/post_detail.html'
     one_post = get_object_or_404(Post, id=post_id)
     comments = one_post.comments.all()
-    form = CommentForm(request.POST or None)
+    form = CommentForm()
     context = {
         'one_post': one_post,
-        'post_id': post_id,
         'form': form,
         'comments': comments
     }
@@ -126,14 +117,11 @@ def add_comment(request, post_id):
 @authorized_only
 def follow_index(request):
     posts = Post.objects.filter(author__following__user=request.user)
-    paginator = Paginator(posts, settings.NUMBER_OF_POSTS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
     template = 'posts/follow.html'
     title = 'Посты ваших любимых авторов'
     context = {
         'title': title,
-        'page_obj': page_obj,
+        'page_obj': piginator(request, posts),
     }
     return render(request, template, context)
 
@@ -142,9 +130,8 @@ def follow_index(request):
 def profile_follow(request, username):
     user = request.user
     author = User.objects.get(username=username)
-    following = Follow.objects.filter(user=user, author=author)
-    if author != user and not following.exists():
-        Follow.objects.create(user=user, author=author)
+    if author != user:
+        Follow.objects.get_or_create(user=user, author=author)
     return redirect('posts:profile', username=username)
 
 
@@ -152,6 +139,5 @@ def profile_follow(request, username):
 def profile_unfollow(request, username):
     author = User.objects.get(username=username)
     following = Follow.objects.filter(user=request.user, author=author)
-    if following.exists():
-        following.delete()
+    following.delete()
     return redirect('posts:profile', username=username)

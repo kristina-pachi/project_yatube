@@ -6,8 +6,11 @@ from .models import Post, Comment
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        labels = {'text': 'Текст поста',
-                  'group': 'Группа'}
+        labels = {
+            'text': 'Текст поста',
+            'group': 'Группа',
+            'image': 'Изображение'
+        }
         help_texts = {'text': 'Текст нового поста',
                       'group': 'Выберите группу'}
         fields = ['text', 'group', 'image']
@@ -16,8 +19,11 @@ class PostForm(forms.ModelForm):
 class PostFormEdit(forms.ModelForm):
     class Meta:
         model = Post
-        labels = {'text': 'Текст поста',
-                  'group': 'Группа'}
+        labels = {
+            'text': 'Текст поста',
+            'group': 'Группа',
+            'image': 'Изображение'
+        }
         help_texts = {'text': 'Текст редактируемого поста',
                       'group': 'Группа, к которой относится пост'}
         fields = ['text', 'group', 'image']

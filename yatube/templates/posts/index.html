@@ -2,7 +2,7 @@
 {% load static %}
 {% block header %}Главная страница{% endblock %}
 {% block content %}
-  <h5>{{ title }}</h5>
+  <h5>Последние обновления на сайте</h5>
   {% include 'posts/includes/switcher.html' %}
   {% for post in page_obj %}
     {% include 'includes/article.html' %}

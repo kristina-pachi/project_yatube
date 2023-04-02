@@ -40,7 +40,7 @@
         {{ one_post.text }}
       </p>
       {% if user == one_post.author %}
-        <a class="btn btn-primary" href="{% url 'posts:post_edit' post_id %}">
+        <a class="btn btn-primary" href="{% url 'posts:post_edit' one_post.pk %}">
           редактировать запись
         </a>
       {% endif %}
