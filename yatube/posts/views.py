@@ -25,7 +25,7 @@ def piginator(request, post):
 @cache_page(20)
 def index(request):
     template = 'posts/index.html'
-    posts = Post.objects.select_related().all()
+    posts = Post.objects.select_related('author', 'group').all()
     return render(request, template, {'page_obj': piginator(request, posts)})
 
 

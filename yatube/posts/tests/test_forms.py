@@ -70,7 +70,7 @@ class TaskCreateFormTests(TestCase):
             'image': uploaded,
         }
 
-        response = self.authorized_client.post(
+        self.authorized_client.post(
             reverse('posts:post_create'),
             data=form_data,
             follow=True
@@ -83,6 +83,9 @@ class TaskCreateFormTests(TestCase):
                 image='posts/small.gif'
             ).exists()
         )
+
+    def test_image_error(self):
+        """Форма выдаст ошибку если пользователь отправит не изображение"""
         text = (
             b'ddsfsdfsdfsfsd'
         )
@@ -91,7 +94,12 @@ class TaskCreateFormTests(TestCase):
             content=text,
             content_type='text/txt'
         )
-        form_data['image'] = uploaded
+        form_data = {
+            'group': self.group.id,
+            'text': 'Интересно, когда ты говоришь,ты себя сам слышишь '
+                    'или так просто дрейфуешь по сознанию?',
+            'image': uploaded,
+        }
         response = self.authorized_client.post(
             reverse('posts:post_create'),
             data=form_data,
