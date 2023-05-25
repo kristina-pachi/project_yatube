@@ -9,7 +9,7 @@ Pet-проект социальная сеть YATUBE
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone https://github.com/kristina-pachi/api_final_yatube.git
+git clone https://github.com/kristina-pachi/hw05_final.git
 ```
 
 Cоздать и активировать виртуальное окружение:
